@@ -2,12 +2,12 @@ from DAS4PythonAPI.Util import encodeField
 
 
 class SimulationSource(object):
-    def __init__(self):
-        self.simulationType = "RANDOM_DATA_SIMULATION"
-        self.streamName = "FooStream"
-        self.siddhiAppName = "TestSiddhiApp"
-        self.timeStampInterval = 5
-        self.attributeConfiguration = []
+    def __init__(self, simulationType=None, streamName=None, siddhiAppName=None, timeStampInterval=5, attributeConfiguration=[]):
+        self.simulationType = simulationType
+        self.streamName = streamName
+        self.siddhiAppName = siddhiAppName
+        self.timeStampInterval = timeStampInterval
+        self.attributeConfiguration = attributeConfiguration
 
     def toRequestObject(self):
         attribs = []

@@ -14,3 +14,8 @@ class RestClient(object):
         headers = {'content-type': 'text/plain'}
         resp = requests.post(self.base_url + sub_url, params=params, data=data, headers = headers)
         return resp
+
+    def _sendDeleteRequest(self, sub_url,params = None):
+        headers = {'content-type': 'text/plain'}
+        resp = requests.delete(self.base_url + sub_url, params=params, headers = headers)
+        return resp
