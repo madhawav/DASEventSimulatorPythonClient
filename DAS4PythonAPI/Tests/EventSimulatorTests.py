@@ -2,10 +2,10 @@ import unittest
 
 import logging
 
-from EventSimulator.AttributeConfiguration import AttributeConfiguration
-from EventSimulator.EventSimulatorClient import EventSimulatorClient
-from EventSimulator.SimulationConfiguration import SimulationConfiguration
-from EventSimulator.SimulationSource import SimulationSource
+from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfiguration
+from DAS4PythonAPI.EventSimulator.EventSimulatorClient import EventSimulatorClient
+from DAS4PythonAPI.EventSimulator.SimulationConfiguration import SimulationConfiguration
+from DAS4PythonAPI.EventSimulator.SimulationSource import SimulationSource
 
 logging.basicConfig(level=logging.INFO)
 

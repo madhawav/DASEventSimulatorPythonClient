@@ -1,6 +1,6 @@
 import json
 
-from Communication.RestClient import RestClient
+from DAS4PythonAPI.Communication.RestClient import RestClient
 
 
 class EventSimulatorClient(RestClient):

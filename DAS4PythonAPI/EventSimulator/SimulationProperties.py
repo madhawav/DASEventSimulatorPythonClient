@@ -1,4 +1,4 @@
-from Util import encodeField
+from DAS4PythonAPI.Util import encodeField
 
 
 class SimulationProperties(object):

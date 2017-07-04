@@ -1,9 +1,9 @@
 import json
 
-from Communication.RestClient import RestClient
-from EventSimulator.AttributeConfiguration import AttributeConfiguration
-from EventSimulator.SimulationProperties import SimulationProperties
-from EventSimulator.SimulationSource import SimulationSource
+from DAS4PythonAPI.Communication.RestClient import RestClient
+from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfiguration
+from DAS4PythonAPI.EventSimulator.SimulationProperties import SimulationProperties
+from DAS4PythonAPI.EventSimulator.SimulationSource import SimulationSource
 
 class SimulationConfiguration(object):
     def __init__(self, simulation_name):
