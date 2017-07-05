@@ -69,11 +69,35 @@ class EventSimulatorClient(RestClient):
     def uploadCSV(self, fileName, raw=None, path=None):
         files = {}
         if raw is not None:
-            files = {fileName : raw}
+            files = {"file" : (fileName,raw)}
         else:
-            files = {fileName : open(path,"rb")}
+            files = {"file" : (fileName,open(path,"rb"))}
         r = self._sendPostRequest("/files",files=files)
 
+        logging.info(r)
+
+        if r.status_code == 201:
+            return True
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def updateCSV(self, uploadedFileName, newFileName,raw = None, path=None):
+        files = {}
+        if raw is not None:
+            files = {"file": (newFileName, raw)}
+        else:
+            files = {"file": (newFileName, open(path, "rb"))}
+        r = self._sendPutRequest("/files/" + uploadedFileName, files=files)
+
+        logging.info(r)
+
+        if r.status_code == 200:
+            return True
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def deleteCSV(self, fileName):
+        r = self._sendDeleteRequest("/files/" + fileName)
         logging.info(r)
 
         if r.status_code == 200:

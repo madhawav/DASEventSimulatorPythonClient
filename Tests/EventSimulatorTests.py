@@ -29,12 +29,35 @@ class EventSimulatorTests(unittest.TestCase):
         self.assertTrue(eventSimulatorClient.simulateSingleEvent(singleSimulationConfiguration))
         logging.info("Successfully Simulated Single Event")
 
-    def testCSVUpload(self):
-        logging.info("Test: Uploading a CSV")
+    def testCSVUploadAndDelete(self):
+        logging.info("Test: Uploading and Deleting a CSV.")
         eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
 
         self.assertTrue(eventSimulatorClient.uploadCSV("sample.csv",path=resources_path+"sample.csv"))
         logging.info("Successfully Uploaded CSV")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteCSV("sample.csv"))
+        logging.info("Successfully Deleted CSV")
+
+
+    def testCSVUpdate(self):
+        logging.info("Test: Uploading, Updating and Deleting a CSV.")
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        self.assertTrue(eventSimulatorClient.uploadCSV("sample.csv",path=resources_path+"sample.csv"))
+        logging.info("Successfully Uploaded CSV")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.updateCSV("sample.csv","sample2.csv", path=resources_path + "sample.csv"))
+        logging.info("Successfully Uploaded CSV")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteCSV("sample2.csv"))
+        logging.info("Successfully Deleted CSV")
 
 
     def testSaveDeleteSimulationFeedConfiguration(self):

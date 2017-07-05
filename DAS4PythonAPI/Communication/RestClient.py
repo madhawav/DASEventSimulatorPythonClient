@@ -10,14 +10,11 @@ class RestClient(object):
         resp = requests.get(self.base_url + sub_url, params=params, headers = headers)
         return resp
 
-    def _sendPostRequest(self, sub_url, data=None, params = None, files=None):
-        headers = {'content-type': 'text/plain'}
-        headers = None
+    def _sendPostRequest(self, sub_url, data=None, params = None, files=None, headers=None):
         resp = requests.post(self.base_url + sub_url, params=params, data=data, headers = headers,files=files)
         return resp
 
-    def _sendPutRequest(self, sub_url, data=None, params=None, files=None):
-        headers = {'content-type': 'text/plain'}
+    def _sendPutRequest(self, sub_url, data=None, params=None, files=None, headers=None):
         resp = requests.put(self.base_url + sub_url, params=params, files=files ,data=data, headers=headers)
         return resp
 
