@@ -1,7 +1,7 @@
-def encodeField(value):
+def encodeField(value, encode_function=str):
     if value is None:
         return None
-    return str(value)
+    return encode_function(value)
 
 def decodeField(value, type):
     if value is None:
