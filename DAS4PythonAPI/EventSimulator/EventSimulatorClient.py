@@ -10,7 +10,7 @@ class EventSimulatorClient(RestClient):
         RestClient.__init__(self,base_url)
 
     def saveSimulationFeedConfiguration(self, simulationConfiguration):
-        r = self._sendPostRequest("/feed",data=json.dumps(simulationConfiguration.toRequestObject()))
+        r = self._sendPostRequest("/feed",data=json.dumps(simulationConfiguration.toJSONObject()))
         if r.status_code == 201:
             return True
         elif r.status_code == 409:
@@ -20,7 +20,7 @@ class EventSimulatorClient(RestClient):
 
 
     def editSimulationFeedConfiguration(self, simulationName,simulationConfiguration):
-        r = self._sendPutRequest("/feed/"+simulationName,data=json.dumps(simulationConfiguration.toRequestObject()))
+        r = self._sendPutRequest("/feed/"+simulationName,data=json.dumps(simulationConfiguration.toJSONObject()))
         if r.status_code == 200:
             return True
         elif r.status_code == 404:
@@ -52,8 +52,8 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code)  + ": " + r.text)
 
     def simulateSingleEvent(self, singleSimulationConfiguration):
-        logging.info("Sending: " + json.dumps(singleSimulationConfiguration.toRequestObject()))
-        r = self._sendPostRequest("/single", data=json.dumps(singleSimulationConfiguration.toRequestObject()))
+        logging.info("Sending: " + json.dumps(singleSimulationConfiguration.toJSONObject()))
+        r = self._sendPostRequest("/single", data=json.dumps(singleSimulationConfiguration.toJSONObject()))
         if r.status_code == 200:
             logging.info("Received: " + r.text)
             result = r.json()

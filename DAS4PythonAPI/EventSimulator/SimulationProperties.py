@@ -25,6 +25,3 @@ class SimulationProperties(APIObject):
         result = SimulationProperties(simulationName=decodeField(jsonObject["simulationName"], str))
         result._parse(jsonObject)
         return result
-
-    def toRequestObject(self):
-        return self.toJSONObject()

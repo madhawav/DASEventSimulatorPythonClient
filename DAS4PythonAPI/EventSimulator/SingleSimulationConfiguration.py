@@ -1,28 +1,15 @@
 import time
 
-from DAS4PythonAPI.Util import encodeField
+from DAS4PythonAPI.ObjectMapping.APIObject import APIObject
+from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping, ListFieldMapping
 
 
-class SingleSimulationConfiguration(object):
+class SingleSimulationConfiguration(APIObject):
     def __init__(self, siddhiAppName, streamName, data):
+        self._setup(field_mapping={"siddhiAppName":FieldMapping(str),"streamName":FieldMapping(str),
+                                   "data":ListFieldMapping(int,str), "timestamp":FieldMapping(int)})
         self.siddhiAppName = siddhiAppName
         self.streamName = streamName
         self.data = data
         self.timestamp = None
-
-    def toRequestObject(self):
-        req_data = []
-
-        for datum in self.data:
-            req_data.append(encodeField(datum))
-
-        requestObject = {
-            "siddhiAppName": encodeField(self.siddhiAppName),
-            "streamName": encodeField(self.streamName),
-            "data": req_data
-        }
-        if self.timestamp is not None:
-            requestObject["timestamp"] = encodeField(self.timestamp)
-
-        return requestObject
 
