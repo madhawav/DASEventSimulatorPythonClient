@@ -2,6 +2,7 @@ import json
 import logging
 
 from DAS4PythonAPI.Communication.RestClient import RestClient
+from DAS4PythonAPI.EventSimulator.FeedSimulationConfiguration import FeedSimulationConfiguration
 
 
 class EventSimulatorClient(RestClient):
@@ -39,11 +40,10 @@ class EventSimulatorClient(RestClient):
     def retrieveSimulationFeedConfiguration(self, simulationName):
         r = self._sendGetRequest("/feed/" + simulationName)
         if r.status_code == 200:
-            logging.info("Received: " + r.text)
             result = r.json()
             if result["status"].lower() == "ok":
-                data = json.loads(result["message"])
-                return data
+                jsonObject = json.loads(result["message"])["Simulation configuration"]
+                return FeedSimulationConfiguration.parse(jsonObject)
             else:
                 raise Exception("Respose says not ok")
         elif r.status_code == 404:
@@ -63,5 +63,20 @@ class EventSimulatorClient(RestClient):
                 raise Exception("Respose says not ok")
         elif r.status_code == 409:
             raise Exception("EventSimulationConfiguration with same name already exists.")
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def uploadCSV(self, fileName, raw=None, path=None):
+        files = {}
+        if raw is not None:
+            files = {fileName : raw}
+        else:
+            files = {fileName : open(path,"rb")}
+        r = self._sendPostRequest("/files",files=files)
+
+        logging.info(r)
+
+        if r.status_code == 200:
+            return True
         else:
             raise Exception(str(r.status_code) + ": " + r.text)

@@ -1,6 +1,7 @@
 import unittest
 
 import logging
+import os
 from time import sleep
 
 from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfiguration
@@ -11,6 +12,7 @@ from DAS4PythonAPI.EventSimulator.SingleSimulationConfiguration import SingleSim
 
 logging.basicConfig(level=logging.INFO)
 
+resources_path = os.path.dirname(__file__) + "/resources/"
 
 class EventSimulatorTests(unittest.TestCase):
     def setUp(self):
@@ -26,6 +28,13 @@ class EventSimulatorTests(unittest.TestCase):
 
         self.assertTrue(eventSimulatorClient.simulateSingleEvent(singleSimulationConfiguration))
         logging.info("Successfully Simulated Single Event")
+
+    def testCSVUpload(self):
+        logging.info("Test: Uploading a CSV")
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        self.assertTrue(eventSimulatorClient.uploadCSV("sample.csv",path=resources_path+"sample.csv"))
+        logging.info("Successfully Uploaded CSV")
 
 
     def testSaveDeleteSimulationFeedConfiguration(self):
@@ -100,18 +109,16 @@ class EventSimulatorTests(unittest.TestCase):
 
         svr.sources.append(sm1)
 
-        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
-        logging.info("Successfully Saved Simulation Feed Configuration")
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr), "Unable to Save "
+                                                                                   "SimulationConfiguration")
 
         sleep(5)
-        response = eventSimulatorClient.retrieveSimulationFeedConfiguration("simulationPrimitive")
-        # NOTE: Unable to proceed since JSON Response sent from DAS has an invalid message field
-        # {"status":"OK","message":"Simulation configuration : {\"sources\":[{\"timeStampInterval\":\"5\",\"simulationType\":\"RANDOM_DATA_SIMULATION\",\"attributeConfiguration\":[{\"length\":\"10\",\"type\":\"PRIMITIVE_BASED\"},{\"min\":\"30000\",\"max\":\"30000\",\"precision\":\"2\",\"type\":\"PRIMITIVE_BASED\"},{\"min\":\"300\",\"max\":\"300\",\"type\":\"PRIMITIVE_BASED\"}],\"streamName\":\"FooStream\",\"siddhiAppName\":\"TestSiddhiApp\"}],\"properties\":{\"timestampStartTime\":\"1488615136958\",\"simulationName\":\"simulationPrimitive\",\"timeInterval\":\"1000\",\"timestampEndTime\":null,\"noOfEvents\":\"8\"}}"}
-        # Simulation configuration should be placed within inverted commas
+        retrieveObject = eventSimulatorClient.retrieveSimulationFeedConfiguration("simulationPrimitive")
+        self.assertTrue(retrieveObject == svr, "Retrieved SimulationConfigurations does not match")
 
         sleep(5)
-        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration("simulationPrimitive"))
-        logging.info("Successfully Deleted Simulation Feed Configuration")
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration("simulationPrimitive"),"Unable to delete"
+                                                                                            "SimulationConfiguration")
 
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ class SingleSimulationConfiguration(object):
         self.siddhiAppName = siddhiAppName
         self.streamName = streamName
         self.data = data
-        self.timestamp = millis = int(round(time.time() * 1000))
+        self.timestamp = None
 
     def toRequestObject(self):
         req_data = []
@@ -19,9 +19,10 @@ class SingleSimulationConfiguration(object):
         requestObject = {
             "siddhiAppName": encodeField(self.siddhiAppName),
             "streamName": encodeField(self.streamName),
-            "data": req_data,
-            "timestamp": encodeField(self.timestamp)
+            "data": req_data
         }
+        if self.timestamp is not None:
+            requestObject["timestamp"] = encodeField(self.timestamp)
 
         return requestObject
 
