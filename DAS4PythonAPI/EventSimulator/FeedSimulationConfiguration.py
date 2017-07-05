@@ -5,7 +5,7 @@ from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfigu
 from DAS4PythonAPI.EventSimulator.SimulationProperties import SimulationProperties
 from DAS4PythonAPI.EventSimulator.SimulationSource import SimulationSource
 
-class SimulationFeedConfiguration(object):
+class FeedSimulationConfiguration(object):
     def __init__(self, simulation_name = None, properties = None):
         if properties is not None:
             self.properties = properties

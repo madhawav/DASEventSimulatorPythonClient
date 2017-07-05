@@ -15,6 +15,11 @@ class RestClient(object):
         resp = requests.post(self.base_url + sub_url, params=params, data=data, headers = headers)
         return resp
 
+    def _sendPutRequest(self, sub_url, data, params=None):
+        headers = {'content-type': 'text/plain'}
+        resp = requests.put(self.base_url + sub_url, params=params, data=data, headers=headers)
+        return resp
+
     def _sendDeleteRequest(self, sub_url,params = None):
         headers = {'content-type': 'text/plain'}
         resp = requests.delete(self.base_url + sub_url, params=params, headers = headers)
