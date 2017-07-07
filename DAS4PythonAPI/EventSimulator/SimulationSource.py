@@ -2,7 +2,7 @@ from enum import Enum
 
 from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfiguration
 from DAS4PythonAPI.ObjectMapping.APIObject import APIObject, NotSet
-from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping, ListFieldMapping
+from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping, ListFieldMapping, strOrInt
 
 
 class SimulationSource(APIObject):
@@ -25,9 +25,9 @@ class SimulationSource(APIObject):
                                    "siddhiAppName": FieldMapping(str), "timestampInterval": FieldMapping(int),
                                    "attributeConfiguration": ListFieldMapping(AttributeConfiguration.parse,AttributeConfiguration.toJSONObject),
                                    "fileName":FieldMapping(str), "isOrdered":FieldMapping(bool), "delimiter":FieldMapping(str),
-                                   "timestampAttribute":FieldMapping(int), "dataSourceLocation":FieldMapping(str),"driver":FieldMapping(str),
+                                   "timestampAttribute":FieldMapping(strOrInt), "dataSourceLocation":FieldMapping(str),"driver":FieldMapping(str),
                                    "username":FieldMapping(str),"password":FieldMapping(str),"tableName":FieldMapping(str),
-                                   "columnNamesList":ListFieldMapping(str,str,NotSet())})
+                                   "columnNamesList":FieldMapping(str)})
         self.simulationType = simulationType
         self.streamName = streamName
         self.siddhiAppName = siddhiAppName

@@ -19,6 +19,44 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
 
+    def runSimulationFeedConfiguration(self, simulationConfiguration):
+        r = self._sendPostRequest("/feed/" + simulationConfiguration.properties.simulationName + "/?action=run",data=json.dumps(simulationConfiguration.toJSONObject()))
+        if r.status_code == 200:
+            return True
+        elif r.status_code == 404:
+            raise Exception("EventSimulationConfiguration with given name does not exist.")
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def pauseSimulationFeedConfiguration(self, simulationName):
+        r = self._sendPostRequest("/feed/" + simulationName + "/?action=pause")
+        if r.status_code == 200:
+            return True
+        elif r.status_code == 404:
+            raise Exception("EventSimulationConfiguration with given name does not exist.")
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def resumeSimulationFeedConfiguration(self, simulationName):
+        r = self._sendPostRequest("/feed/" + simulationName + "/?action=resume")
+        if r.status_code == 200:
+            return True
+        elif r.status_code == 404:
+            raise Exception("EventSimulationConfiguration with given name does not exist.")
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def stopSimulationFeedConfiguration(self, simulationName):
+        r = self._sendPostRequest("/feed/" + simulationName + "/?action=stop")
+        if r.status_code == 200:
+            return True
+        elif r.status_code == 404:
+            raise Exception("EventSimulationConfiguration with given name does not exist.")
+        elif r.status_code == 409:
+            raise Exception("EventSimulation is already stopped.")
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
     def editSimulationFeedConfiguration(self, simulationName,simulationConfiguration):
         r = self._sendPutRequest("/feed/"+simulationName,data=json.dumps(simulationConfiguration.toJSONObject()))
         if r.status_code == 200:
@@ -104,3 +142,9 @@ class EventSimulatorClient(RestClient):
             return True
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
+
+
+
+
+
+

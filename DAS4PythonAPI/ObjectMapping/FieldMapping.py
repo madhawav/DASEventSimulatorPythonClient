@@ -1,6 +1,12 @@
 from DAS4PythonAPI.ObjectMapping.APIObject import NotSet
 from DAS4PythonAPI.Util import encodeField, decodeField
 
+def strOrInt(v):
+    v = str(v)
+    if str.isnumeric(v):
+        return int(v)
+    else:
+        return v
 
 class FieldMapping(object):
     '''

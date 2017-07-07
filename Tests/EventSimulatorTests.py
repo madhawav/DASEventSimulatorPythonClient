@@ -7,7 +7,6 @@ from time import sleep
 from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfiguration
 from DAS4PythonAPI.EventSimulator.EventSimulatorClient import EventSimulatorClient
 from DAS4PythonAPI.EventSimulator.FeedSimulationConfiguration import FeedSimulationConfiguration
-from DAS4PythonAPI.EventSimulator.SimulationProperties import SimulationProperties
 from DAS4PythonAPI.EventSimulator.SimulationSource import SimulationSource
 from DAS4PythonAPI.EventSimulator.SingleSimulationConfiguration import SingleSimulationConfiguration
 
@@ -314,6 +313,553 @@ class EventSimulatorTests(unittest.TestCase):
 
         self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
         logging.info("Successfully Deleted Simulation Feed Configuration")
+
+
+    def testDBSimulationTwoSource(self):
+        logging.info("Test: DB Simulation - Two Sources")
+
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simDb")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = None
+        svr.properties.noOfEvents = None
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.DATABASE_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.dataSourceLocation = "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation"
+        s1.driver = "com.mysql.jdbc.Driver"
+        s1.username = "root"
+        s1.password = "root"
+        s1.tableName = "foostream3"
+        s1.timestampInterval = 1000
+        s1.columnNamesList = None
+        svr.sources.append(s1)
+
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+
+        target = {
+                  "properties": {
+                    "simulationName": "simDb",
+                    "timestampStartTime": "1488615136958",
+                    "timestampEndTime": "1488615136961",
+                    "timeInterval": "1000"
+                  },
+                  "sources": [
+                    {
+                      "simulationType": "DATABASE_SIMULATION",
+                      "streamName": "FooStream",
+                      "siddhiAppName": "TestSiddhiApp",
+                      "dataSourceLocation": "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation",
+                      "driver" : "com.mysql.jdbc.Driver",
+                      "username": "root",
+                      "password": "root",
+                      "tableName": "foostream4",
+                      "timestampAttribute": "timestamp",
+                      "columnNamesList": "symbol,price,volume"
+                    },
+                    {
+                      "simulationType": "DATABASE_SIMULATION",
+                      "streamName": "FooStream",
+                      "siddhiAppName": "TestSiddhiApp",
+                      "dataSourceLocation": "jdbc:mysql:\/\/localhost:3306\/Simulation",
+                      "driver" : "com.mysql.jdbc.Driver",
+                      "username": "root",
+                      "password": "root",
+                      "tableName": "foostream",
+                      "timestampAttribute": "timestamp",
+                      "columnNamesList": "name,price,volume"
+                    }
+                  ]
+                }
+
+
+        svr = FeedSimulationConfiguration("simDb")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = 1488615136961
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.DATABASE_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.dataSourceLocation = "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation"
+        s1.driver="com.mysql.jdbc.Driver"
+        s1.username="root"
+        s1.password="root"
+        s1.tableName="foostream4"
+        s1.timestampAttribute="timestamp"
+        s1.columnNamesList="symbol,price,volume"
+        svr.sources.append(s1)
+
+        s2 = SimulationSource(simulationType=SimulationSource.Type.DATABASE_SIMULATION)
+        s2.streamName = "FooStream"
+        s2.siddhiAppName = "TestSiddhiApp"
+        s2.dataSourceLocation = "jdbc:mysql:\/\/localhost:3306\/Simulation"
+        s2.driver = "com.mysql.jdbc.Driver"
+        s2.username = "root"
+        s2.password = "root"
+        s2.tableName = "foostream"
+        s2.timestampAttribute = "timestamp"
+        s2.columnNamesList = "name,price,volume"
+        svr.sources.append(s2)
+
+        match = svr.toJSONObject()
+
+        self.assertDictEqual(target,match)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
+
+    def testDBSimulationOneSourceWOColumnNames(self):
+        logging.info("Test: DB Simulation - One Source w\o column names")
+
+        target={
+          "properties": {
+            "simulationName": "simDbNoColumnsList",
+            "timestampStartTime": "1488615136958",
+            "timestampEndTime": "1488615136961",
+            "timeInterval": "1000"
+          },
+          "sources": [
+            {
+              "simulationType": "DATABASE_SIMULATION",
+              "streamName": "FooStream",
+              "siddhiAppName": "TestSiddhiApp",
+              "dataSourceLocation": "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation",
+              "driver" : "com.mysql.jdbc.Driver",
+              "username": "root",
+              "password": "root",
+              "tableName": "foostream3",
+              "timestampAttribute": "timestamp",
+              "columnNamesList": None
+            }
+          ]
+        }
+
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simDbNoColumnsList")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = 1488615136961
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.DATABASE_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.dataSourceLocation = "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation"
+        s1.driver="com.mysql.jdbc.Driver"
+        s1.username="root"
+        s1.password="root"
+        s1.tableName="foostream3"
+        s1.timestampAttribute="timestamp"
+        s1.columnNamesList=None
+        svr.sources.append(s1)
+
+        match = svr.toJSONObject()
+
+        self.assertDictEqual(target,match)
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
+
+    def testPrimitiveRandomSimulation(self):
+        logging.info("Test: Random Simulation - Primitive")
+
+        target = {
+          "properties": {
+            "simulationName": "simulationPrimitive",
+            "timestampStartTime": "1488615136958",
+            "timestampEndTime": None,
+            "noOfEvents" : "8",
+            "timeInterval": "1000"
+          },
+          "sources": [
+           {
+          "simulationType": "RANDOM_DATA_SIMULATION",
+          "streamName": "FooStream",
+          "siddhiAppName": "TestSiddhiApp",
+          "timestampInterval": "5",
+          "attributeConfiguration": [
+            {
+              "type": "PRIMITIVE_BASED",
+              "length": "10"
+            },
+            {
+              "type": "PRIMITIVE_BASED",
+              "min": "35000",
+              "max": "30000",
+              "precision": "2"
+            },
+            {
+              "type": "PRIMITIVE_BASED",
+              "min": "150",
+              "max": "300"
+            }
+          ]
+        }
+          ]
+        }
+
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simulationPrimitive")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = None
+        svr.properties.noOfEvents=8
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.RANDOM_DATA_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.timestampInterval = 5
+        svr.sources.append(s1)
+
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED,length=10))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED, min=35000, max=30000,precision=2))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED, min=150, max=300)
+        )
+
+        match = svr.toJSONObject()
+
+        self.assertDictEqual(target, match)
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
+
+
+    def testRandomSimulationRegexAndPrimitive(self):
+        logging.info("Test: Random Simulation - Regex and Primitive")
+
+        target = {
+          "properties": {
+            "simulationName": "simRndm",
+            "timestampStartTime": "1488615136958",
+            "timestampEndTime": "1488615136998",
+            "noOfEvents" : None,
+            "timeInterval": "1000"
+          },
+          "sources": [
+            {
+              "simulationType": "RANDOM_DATA_SIMULATION",
+              "streamName": "FooStream",
+              "siddhiAppName": "TestSiddhiApp",
+              "timestampInterval": "5",
+              "attributeConfiguration": [
+                {
+                  "type": "REGEX_BASED",
+                  "pattern": "[a-zA-Z]*"
+                },
+                {
+                  "type": "REGEX_BASED",
+                  "pattern": "[0-9]*"
+                },
+                {
+                  "type": "PRIMITIVE_BASED",
+                  "primitiveType": "LONG",
+                  "min": "1500000",
+                  "max": "30000000"
+                }
+              ]
+            }
+          ]
+        }
+
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simRndm")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = 1488615136998
+        svr.properties.noOfEvents=None
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.RANDOM_DATA_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.timestampInterval = 5
+        svr.sources.append(s1)
+
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.REGEX_BASED,pattern="[a-zA-Z]*"))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.REGEX_BASED, pattern="[0-9]*"))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED, min=1500000, max=30000000, primitiveType=AttributeConfiguration.PrimitiveType.LONG)
+        )
+
+        match = svr.toJSONObject()
+
+        self.assertDictEqual(target, match)
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
+    def testRandomSimulationPropertyAndPrimitive(self):
+        logging.info("Test: Random Simulation - Property and Primitive")
+
+        target = {
+          "properties": {
+            "simulationName": "simProperty",
+            "timestampStartTime": "1488615136958",
+            "timestampEndTime": "1488615136978",
+            "timeInterval": "1000"
+          },
+          "sources": [
+            {
+              "simulationType": "RANDOM_DATA_SIMULATION",
+              "streamName": "FooStream",
+              "siddhiAppName": "TestSiddhiApp",
+              "timestampInterval": "5",
+              "attributeConfiguration": [
+                {
+                  "type": "PROPERTY_BASED",
+                  "property": "FULL_NAME"
+                },
+                {
+                  "type": "PROPERTY_BASED",
+                  "property": "ALTITUDE"
+                },
+                {
+                  "type": "PRIMITIVE_BASED",
+                  "primitiveType": "LONG",
+                  "min": "150",
+                  "max": "300"
+                }
+              ]
+            }
+          ]
+        }
+
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simProperty")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = 1488615136978
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.RANDOM_DATA_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.timestampInterval = 5
+        svr.sources.append(s1)
+
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PROPERTY_BASED, property="FULL_NAME"))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PROPERTY_BASED, property="ALTITUDE"))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED, min=150, max=300,
+                                   primitiveType=AttributeConfiguration.PrimitiveType.LONG)
+        )
+
+        match = svr.toJSONObject()
+
+        self.assertDictEqual(target, match)
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
+
+    def testDBandCSVSimulation(self):
+        logging.info("Test: Random Simulation - Property and Primitive")
+
+        target = {
+          "properties": {
+            "simulationName": "simulationCSV",
+            "timestampStartTime": "1488615136958",
+            "timestampEndTime": "1488615136966",
+            "timeInterval": "1000"
+          },
+          "sources": [
+            {
+              "simulationType": "DATABASE_SIMULATION",
+              "streamName": "FooStream",
+              "siddhiAppName": "TestSiddhiApp",
+              "dataSourceLocation": "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation",
+              "driver" : "com.mysql.jdbc.Driver",
+              "username": "root",
+              "password": "root",
+              "tableName": "foostream3",
+              "timestampAttribute": "timestamp",
+              "columnNamesList": "symbol,price,volume"
+            },
+            {
+              "simulationType": "CSV_SIMULATION",
+              "streamName": "FooStream",
+              "siddhiAppName": "TestSiddhiApp",
+              "fileName": "sample.csv",
+              "timestampAttribute": "0",
+              "isOrdered": "False",
+              "delimiter": ","
+            }
+          ]
+        }
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simulationCSV")
+        svr.properties.timestampStartTime = 1488615136958
+        svr.properties.timestampEndTime = 1488615136966
+        svr.properties.timeInterval = 1000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.DATABASE_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.dataSourceLocation = "jdbc:mysql:\/\/localhost:3306\/DatabaseFeedSimulation"
+        s1.driver = "com.mysql.jdbc.Driver"
+        s1.username = "root"
+        s1.password = "root"
+        s1.tableName = "foostream3"
+        s1.timestampAttribute = "timestamp"
+        s1.columnNamesList = "symbol,price,volume"
+
+        svr.sources.append(s1)
+
+        s2 = SimulationSource(simulationType=SimulationSource.Type.CSV_SIMULATION)
+        s2.streamName = "FooStream"
+        s2.siddhiAppName = "TestSiddhiApp"
+        s2.fileName = "sample.csv"
+        s2.timestampAttribute = 0
+        s2.isOrdered = False
+        s2.delimiter = ","
+
+        svr.sources.append(s2)
+
+        match = svr.toJSONObject()
+
+        self.assertDictEqual(target["sources"][1], match["sources"][1])
+
+        self.assertTrue(eventSimulatorClient.uploadCSV("sample.csv", path=resources_path + "sample.csv"))
+        logging.info("Successfully Uploaded CSV")
+
+        sleep(5)
+
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
+
+        self.assertTrue(eventSimulatorClient.deleteCSV("sample.csv"))
+        logging.info("Successfully Deleted CSV")
+
+
+    def testRunPausePrimitiveRandom(self):
+        logging.info("Test: Random Simulation - Primitive. Save, Run, Pause, Resume, Stop and Delete.")
+
+        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        svr = FeedSimulationConfiguration("simulationPrimitive")
+        svr.properties.noOfEvents=8
+        svr.properties.timeInterval = 30000
+
+        s1 = SimulationSource(simulationType=SimulationSource.Type.RANDOM_DATA_SIMULATION)
+        s1.streamName = "FooStream"
+        s1.siddhiAppName = "TestSiddhiApp"
+        s1.timestampInterval = 5
+        svr.sources.append(s1)
+
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED,length=10))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED, min=35000, max=30000,precision=2))
+        s1.attributeConfiguration.append(
+            AttributeConfiguration(type=AttributeConfiguration.Type.PRIMITIVE_BASED, min=150, max=300)
+        )
+
+        self.assertTrue(eventSimulatorClient.saveSimulationFeedConfiguration(svr))
+        logging.info("Successfully Saved Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.runSimulationFeedConfiguration(svr))
+        logging.info("Successfully Started Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.pauseSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Paused Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.resumeSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Resumed Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.stopSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Stopped Simulation Feed Configuration")
+
+        sleep(5)
+
+        self.assertTrue(eventSimulatorClient.deleteSimulationFeedConfiguration(svr.properties.simulationName))
+        logging.info("Successfully Deleted Simulation Feed Configuration")
+
 
 
 
