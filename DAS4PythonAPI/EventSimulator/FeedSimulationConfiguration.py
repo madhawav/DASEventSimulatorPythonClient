@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 
 from DAS4PythonAPI.EventSimulator.SimulationProperties import SimulationProperties
 from DAS4PythonAPI.EventSimulator.SimulationSource import SimulationSource
@@ -7,6 +8,8 @@ from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping, ListFieldMapp
 
 
 class FeedSimulationConfiguration(APIObject):
+
+
     def __init__(self, simulation_name = None, properties = None):
         self._setup(field_mapping={"properties":FieldMapping(SimulationProperties.parse, SimulationProperties.toJSONObject),"sources":ListFieldMapping(SimulationSource.parse,SimulationSource.toJSONObject)})
         if properties is not None:
@@ -22,4 +25,6 @@ class FeedSimulationConfiguration(APIObject):
         result = FeedSimulationConfiguration(simulation_name=jsonObject["properties"]["simulationName"])
         result._parse(jsonObject)
         return result
+
+
 

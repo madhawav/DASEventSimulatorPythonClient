@@ -1,6 +1,6 @@
 import random
 
-from DAS4PythonAPI.ObjectMapping.APIObject import APIObject
+from DAS4PythonAPI.ObjectMapping.APIObject import APIObject, NotSet
 from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping
 from DAS4PythonAPI.Util import encodeField, decodeField, decodeObject
 
@@ -8,8 +8,8 @@ ran = random
 
 
 class SimulationProperties(APIObject):
-    def __init__(self, simulationName="Simulation_" + str(random.randint(1, 1000)), timestampStartTime=None,
-                 timestampEndTime=None, noOfEvents=8, timeInterval=1000):
+    def __init__(self, simulationName="Simulation_" + str(random.randint(1, 1000)), timestampStartTime=NotSet(),
+                 timestampEndTime=NotSet(), noOfEvents=NotSet(), timeInterval=NotSet()):
         self._setup(field_mapping={"simulationName": FieldMapping(str), "timestampStartTime": FieldMapping(int),
                                    "timestampEndTime": FieldMapping(int), "noOfEvents": FieldMapping(int),
                                    "timeInterval": FieldMapping(int)})

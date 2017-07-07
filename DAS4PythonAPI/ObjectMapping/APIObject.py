@@ -2,6 +2,11 @@ from abc import ABCMeta
 
 from DAS4PythonAPI.Util import decodeField, encodeField
 
+class NotSet(object):
+    def __eq__(self, other):
+        if isinstance(other,NotSet):
+            return True
+        return False
 
 class APIObject(metaclass=ABCMeta):
     '''

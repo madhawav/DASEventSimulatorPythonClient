@@ -1,3 +1,4 @@
+from DAS4PythonAPI.ObjectMapping.APIObject import NotSet
 from DAS4PythonAPI.Util import encodeField, decodeField
 
 
@@ -5,7 +6,7 @@ class FieldMapping(object):
     '''
     Describes a mapping of a field between JSON Object and APIObject
     '''
-    def __init__(self, decode_function, encode_function=str, default_value=None, addDefaultField=False):
+    def __init__(self, decode_function, encode_function=str, default_value=NotSet(), addDefaultField=False):
         '''
         Creates a field mapping between JSON Object field and API Object field
         :param decode_function: converts JSON field value to APIObject field value 
