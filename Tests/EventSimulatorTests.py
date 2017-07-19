@@ -20,6 +20,9 @@ class EventSimulatorTests(unittest.TestCase):
         self.simulationUrl = self.hostUrl + "/simulation"
         logging.info("Prior to launching tests, make sure DAS 4 is running at " + self.hostUrl)
 
+    def tearDown(self):
+        sleep(5) # Sleep to provide sufficient time for DAS 4.0 to update status
+
     def testSingleSimulation(self):
         logging.info("Test: Simulating a Single Event")
         eventSimulatorClient = EventSimulatorClient(self.simulationUrl)

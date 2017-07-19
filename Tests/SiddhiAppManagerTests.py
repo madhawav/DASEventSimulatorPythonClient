@@ -4,8 +4,6 @@ import unittest
 import logging
 from time import sleep
 
-from debian.debian_support import readLinesSHA1
-
 from DAS4PythonAPI.SiddhiAppManagement.SiddhiAppManagerClient import SiddhiAppManagerClient, UpdateAppStatusResponse
 
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +17,9 @@ class EventSimulatorTests(unittest.TestCase):
         self.hostUrl = "http://localhost:9090"
         self.simulationUrl = self.hostUrl + "/siddhi-apps"
         logging.info("Prior to launching tests, make sure DAS 4 is running at " + self.hostUrl)
+
+    def tearDown(self):
+        sleep(5) # Sleep to provide sufficient time for DAS 4.0 to update status
 
     def testRetrieveSiddhiAppStatus(self):
         logging.info("Test1: Retrieving a Siddhi App Status")
