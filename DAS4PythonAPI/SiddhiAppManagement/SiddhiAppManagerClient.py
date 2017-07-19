@@ -1,7 +1,11 @@
 import json
+from enum import Enum
 
 from DAS4PythonAPI.Communication.RestClient import RestClient
 
+class UpdateAppStatusResponse(Enum):
+    savedNew=201,
+    updated=200
 
 class SiddhiAppManagerClient(RestClient):
     def __init__(self, siddhi_apps_url):
@@ -58,6 +62,24 @@ class SiddhiAppManagerClient(RestClient):
         if r.status_code == 200:
             result = r.json()
             return result
+        else:
+            raise Exception(str(r.status_code) + ": " + r.text)
+
+    def updateSiddhiApp(self, siddhiApp):
+        r = self._sendPutRequest("/", data=siddhiApp)
+        if r.status_code == 200 or r.status_code == 201:
+            result = r.json()
+            if result["type"] == "success":
+                if r.status_code == 200:
+                    return UpdateAppStatusResponse.updated
+                elif r.status_code == 201:
+                    return UpdateAppStatusResponse.savedNew
+            else:
+                raise Exception("Result 'type' not 'success'")
+        elif r.status_code == 400:
+            raise Exception("A validation error occured.")
+        elif r.status_code == 500:
+            raise Exception("An unexpected error occured.")
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
 

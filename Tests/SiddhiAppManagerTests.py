@@ -6,7 +6,7 @@ from time import sleep
 
 from debian.debian_support import readLinesSHA1
 
-from DAS4PythonAPI.SiddhiAppManagement.SiddhiAppManagerClient import SiddhiAppManagerClient
+from DAS4PythonAPI.SiddhiAppManagement.SiddhiAppManagerClient import SiddhiAppManagerClient, UpdateAppStatusResponse
 
 logging.basicConfig(level=logging.INFO)
 
@@ -47,7 +47,7 @@ class EventSimulatorTests(unittest.TestCase):
 
 
     def testListSiddhiApps(self):
-        logging.info("Test1: Save, List Siddhi Apps and Delete")
+        logging.info("Test1: List Siddhi Apps")
         siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
 
         lines = []
@@ -94,6 +94,32 @@ class EventSimulatorTests(unittest.TestCase):
         result = siddhiAppManagerClient.saveSiddhiApp(siddhiApp)
         self.assertTrue(result)
 
+
+        sleep(5)
+
+        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+
+        result = siddhiAppManagerClient.deleteSiddhiApp("TestSiddhiApp1")
+        self.assertTrue(result)
+
+
+    def testUpdateAndDeleteSiddhiApp(self):
+        logging.info("Test: Update and Delete Siddhi App")
+        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+
+        lines = []
+        with open(resources_path + "/TestSiddhiApp1.siddhi", "rb") as f:
+            lines = [line.decode() for line in f.readlines()]
+
+        siddhiApp = "".join(lines)
+
+        result = siddhiAppManagerClient.updateSiddhiApp(siddhiApp)
+        self.assertTrue(result.name == UpdateAppStatusResponse.savedNew.name)
+
+        sleep(5)
+
+        result = siddhiAppManagerClient.updateSiddhiApp(siddhiApp)
+        self.assertTrue(result.name == UpdateAppStatusResponse.updated.name)
 
         sleep(5)
 
