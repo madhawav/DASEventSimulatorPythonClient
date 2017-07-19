@@ -12,12 +12,14 @@ Note: Currently, the event simulator of WSO2 DAS 4.0 has been wrapped.
 - [ ] Python Client on DAS 4.0 via REST API.
 - [ ] Python Client on DAS 3.1 via SOAP API.
 
-# Prerequisite
+# Prerequisites
 - WSO2 Data Analytics Server 4.0 (see `Running the Tests` section for installation instructions)
 - Python3 (Python2.7 will be supported in future)
 - Requests for Python3 (`pip3 install requests`)
 
 # Running the Tests
+Make sure all prerequisites are met before proceeding with tests.
+
 1) Clone the DASPythonClient Repository (this repository) to a suitable location. (say `DASPythonClient`).
 2) Clone and Compile WSO2 DAS 4.0 from Source
  - Clone WSO2 DAS 4.0 from [Github Repository](https://github.com/wso2/product-das).
