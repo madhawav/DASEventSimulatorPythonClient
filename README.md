@@ -1,9 +1,9 @@
-# DAS Event Simulator Python Client
+# WSO2 DAS 4.0 Python Client
 Python Client for WSO2 DAS 4.0 (In Development Version)
 
-This repository is part of the project [Siddhi CEP Python API](https://github.com/madhawav/SiddhiCEPPythonAPI). For more details on complete scope of the project, visit the main project repository at link above.
+This repository is part of the project [Python API for Siddhi CEP](https://gist.github.com/madhawav/195b7dc601d94c40958d88be1d56e705). For more details on complete scope of the project, visit the project gist at link above.
 
-This is currently a work in progress, as a project for Google Summer of Code 2017 Program.
+This repository is currently a work in progress, as a project for Google Summer of Code 2017 Program.
 
 # Current Progress
 - [x] Python Client on DAS 4.0 Event Simulator.

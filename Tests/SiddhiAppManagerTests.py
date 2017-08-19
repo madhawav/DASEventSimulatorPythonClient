@@ -24,9 +24,9 @@ class EventSimulatorTests(unittest.TestCase):
     def testRetrieveSiddhiAppStatus(self):
         logging.info("Test1: Retrieving a Siddhi App Status")
         dasPythonClient = DAS4PythonClient(self.hostUrl)
-        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
+        siddhiAppManagementClient = dasPythonClient.getSiddhiAppManagementClient()
 
-        status = siddhiAppManagerClient.retrieveStatusSiddhiApp("TestSiddhiApp")
+        status = siddhiAppManagementClient.retrieveStatusSiddhiApp("TestSiddhiApp")
 
         self.assertEqual(status,"active")
 
@@ -34,9 +34,9 @@ class EventSimulatorTests(unittest.TestCase):
         logging.info("Test1: Retrieving a Siddhi App")
 
         dasPythonClient = DAS4PythonClient(self.hostUrl)
-        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
+        siddhiAppManagementClient = dasPythonClient.getSiddhiAppManagementClient()
 
-        app = siddhiAppManagerClient.retrieveSiddhiApp("TestSiddhiApp")
+        app = siddhiAppManagementClient.retrieveSiddhiApp("TestSiddhiApp")
 
         lines = []
         with open(resources_path + "/TestSiddhiApp.siddhi","rb") as f:
@@ -54,7 +54,7 @@ class EventSimulatorTests(unittest.TestCase):
         logging.info("Test1: List Siddhi Apps")
 
         dasPythonClient = DAS4PythonClient(self.hostUrl)
-        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
+        siddhiAppManagementClient = dasPythonClient.getSiddhiAppManagementClient()
 
         lines = []
         with open(resources_path + "/TestSiddhiApp1.siddhi", "rb") as f:
@@ -62,24 +62,25 @@ class EventSimulatorTests(unittest.TestCase):
 
         siddhiApp = "".join(lines)
 
-        result = siddhiAppManagerClient.saveSiddhiApp(siddhiApp)
+        result = siddhiAppManagementClient.saveSiddhiApp(siddhiApp)
         self.assertTrue(result)
 
         sleep(5)
 
-        apps = siddhiAppManagerClient.listSiddhiApps()
+        apps = siddhiAppManagementClient.listSiddhiApps()
+        print(apps)
         self.assertTrue("TestSiddhiApp1" in apps)
         logging.info(apps)
 
-        apps = siddhiAppManagerClient.listSiddhiApps(isActive=True)
+        apps = siddhiAppManagementClient.listSiddhiApps(isActive=True)
         self.assertTrue("TestSiddhiApp1" in apps)
         logging.info(apps)
 
-        apps = siddhiAppManagerClient.listSiddhiApps(isActive=False)
+        apps = siddhiAppManagementClient.listSiddhiApps(isActive=False)
         self.assertTrue("TestSiddhiApp1" not in apps)
         logging.info(apps)
 
-        result = siddhiAppManagerClient.deleteSiddhiApp("TestSiddhiApp1")
+        result = siddhiAppManagementClient.deleteSiddhiApp("TestSiddhiApp1")
         self.assertTrue(result)
 
 
