@@ -2,6 +2,11 @@ from DAS4PythonAPI.ObjectMapping.APIObject import NotSet
 from DAS4PythonAPI.__Util import encodeField, decodeField
 
 def strOrInt(v):
+    '''
+    Determines whether v is String or Integer and returns appropriate object.
+    :param v: 
+    :return: 
+    '''
     v = str(v)
     if str.isnumeric(v):
         return int(v)

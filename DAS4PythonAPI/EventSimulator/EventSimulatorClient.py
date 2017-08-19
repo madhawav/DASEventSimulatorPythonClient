@@ -6,11 +6,24 @@ from DAS4PythonAPI.EventSimulator.FeedSimulationConfiguration import FeedSimulat
 
 
 class EventSimulatorClient(RestClient):
-    def __init__(self, base_url):
-        RestClient.__init__(self,base_url)
+    '''
+    Client used to access DAS Event Simulator End Points
+    '''
+
+    def __init__(self, event_simulator_url):
+        '''
+        Instantiates EventSimulatorClient
+        :param event_simulator_url: url to event_simulator endpoint (e.g. root_url + '/simulation')
+        '''
+        RestClient.__init__(self, event_simulator_url)
 
     def saveSimulationFeedConfiguration(self, simulationConfiguration):
-        r = self._sendPostRequest("/feed",data=json.dumps(simulationConfiguration.toJSONObject()))
+        '''
+        Saves a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationConfiguration: 
+        :return: 
+        '''
+        r = self._sendPostRequest("/feed", data=json.dumps(simulationConfiguration.toJSONObject()))
         if r.status_code == 201:
             return True
         elif r.status_code == 409:
@@ -18,9 +31,14 @@ class EventSimulatorClient(RestClient):
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
 
-
     def runSimulationFeedConfiguration(self, simulationConfiguration):
-        r = self._sendPostRequest("/feed/" + simulationConfiguration.properties.simulationName + "/?action=run",data=json.dumps(simulationConfiguration.toJSONObject()))
+        '''
+        Runs a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationConfiguration: 
+        :return: 
+        '''
+        r = self._sendPostRequest("/feed/" + simulationConfiguration.properties.simulationName + "/?action=run",
+                                  data=json.dumps(simulationConfiguration.toJSONObject()))
         if r.status_code == 200:
             return True
         elif r.status_code == 404:
@@ -29,6 +47,11 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def pauseSimulationFeedConfiguration(self, simulationName):
+        '''
+        Pauses a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationName: 
+        :return: 
+        '''
         r = self._sendPostRequest("/feed/" + simulationName + "/?action=pause")
         if r.status_code == 200:
             return True
@@ -38,6 +61,11 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def resumeSimulationFeedConfiguration(self, simulationName):
+        '''
+        Resumes a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationName: 
+        :return: 
+        '''
         r = self._sendPostRequest("/feed/" + simulationName + "/?action=resume")
         if r.status_code == 200:
             return True
@@ -47,6 +75,11 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def stopSimulationFeedConfiguration(self, simulationName):
+        '''
+        Stops a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationName: 
+        :return: 
+        '''
         r = self._sendPostRequest("/feed/" + simulationName + "/?action=stop")
         if r.status_code == 200:
             return True
@@ -57,8 +90,14 @@ class EventSimulatorClient(RestClient):
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
 
-    def editSimulationFeedConfiguration(self, simulationName,simulationConfiguration):
-        r = self._sendPutRequest("/feed/"+simulationName,data=json.dumps(simulationConfiguration.toJSONObject()))
+    def editSimulationFeedConfiguration(self, simulationName, simulationConfiguration):
+        '''
+        Edits a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationName: 
+        :param simulationConfiguration: new simulationNameConfiguration
+        :return: 
+        '''
+        r = self._sendPutRequest("/feed/" + simulationName, data=json.dumps(simulationConfiguration.toJSONObject()))
         if r.status_code == 200:
             return True
         elif r.status_code == 404:
@@ -67,6 +106,11 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def deleteSimulationFeedConfiguration(self, simulationName):
+        '''
+        Deletes a SimulationFeedConfiguration in WSO2 DAS Event Simulator
+        :param simulationName: 
+        :return: 
+        '''
         r = self._sendDeleteRequest("/feed/" + simulationName)
         if r.status_code == 200:
             return True
@@ -76,6 +120,11 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def retrieveSimulationFeedConfiguration(self, simulationName):
+        '''
+        Retrieves a SimulationFeedConfiguration from WSO2 DAS Event Simulator
+        :param simulationName: 
+        :return: 
+        '''
         r = self._sendGetRequest("/feed/" + simulationName)
         if r.status_code == 200:
             result = r.json()
@@ -87,9 +136,14 @@ class EventSimulatorClient(RestClient):
         elif r.status_code == 404:
             raise Exception("EventSimulationConfiguration with specified name does not exist.")
         else:
-            raise Exception(str(r.status_code)  + ": " + r.text)
+            raise Exception(str(r.status_code) + ": " + r.text)
 
     def simulateSingleEvent(self, singleSimulationConfiguration):
+        '''
+        Invokes a Single Simulation in WSO2 DAS Event Simulator
+        :param singleSimulationConfiguration: 
+        :return: 
+        '''
         logging.info("Sending: " + json.dumps(singleSimulationConfiguration.toJSONObject()))
         r = self._sendPostRequest("/single", data=json.dumps(singleSimulationConfiguration.toJSONObject()))
         if r.status_code == 200:
@@ -104,13 +158,20 @@ class EventSimulatorClient(RestClient):
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
 
-    def uploadCSV(self, fileName, raw=None, path=None):
+    def uploadCSV(self, fileName, stream=None, path=None):
+        '''
+        Uploads a CSV to WSO2 DAS Event Simulator. Only one of the parameters stream or path should be given.
+        :param fileName: fileName of file to be uploaded
+        :param stream: stream of file to be uploaded
+        :param path: path of file to be uploaded
+        :return: 
+        '''
         files = {}
-        if raw is not None:
-            files = {"file" : (fileName,raw)}
+        if stream is not None:
+            files = {"file": (fileName, stream)}
         else:
-            files = {"file" : (fileName,open(path,"rb"))}
-        r = self._sendPostRequest("/files",files=files)
+            files = {"file": (fileName, open(path, "rb"))}
+        r = self._sendPostRequest("/files", files=files)
 
         logging.info(r)
 
@@ -119,10 +180,19 @@ class EventSimulatorClient(RestClient):
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
 
-    def updateCSV(self, uploadedFileName, newFileName,raw = None, path=None):
+    def updateCSV(self, uploadedFileName, newFileName, stream=None, path=None):
+        '''
+        Updates a CSV file uploaded to WSO2 DAS Event Simulator. Only one of parameters stream or path should 
+        be provided.
+        :param uploadedFileName: previous file name
+        :param newFileName: new file name
+        :param stream: stream of file to be uploaded
+        :param path: path of file to be uploaded
+        :return: 
+        '''
         files = {}
-        if raw is not None:
-            files = {"file": (newFileName, raw)}
+        if stream is not None:
+            files = {"file": (newFileName, stream)}
         else:
             files = {"file": (newFileName, open(path, "rb"))}
         r = self._sendPutRequest("/files/" + uploadedFileName, files=files)
@@ -135,6 +205,11 @@ class EventSimulatorClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def deleteCSV(self, fileName):
+        '''
+        Deletes a CSV file uploaded to WSO2 DAS Event Simulator
+        :param fileName: 
+        :return: 
+        '''
         r = self._sendDeleteRequest("/files/" + fileName)
         logging.info(r)
 
@@ -142,9 +217,3 @@ class EventSimulatorClient(RestClient):
             return True
         else:
             raise Exception(str(r.status_code) + ": " + r.text)
-
-
-
-
-
-

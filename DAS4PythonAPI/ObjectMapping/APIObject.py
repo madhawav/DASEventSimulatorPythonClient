@@ -4,6 +4,9 @@ from future.utils import with_metaclass
 from DAS4PythonAPI.__Util import decodeField, encodeField
 
 class NotSet(object):
+    '''
+    Denotes that a fields value is not set. (null)
+    '''
     def __ne__(self, other):
         return not self.__eq__(other)
     def __eq__(self, other):
@@ -31,6 +34,12 @@ class APIObject(with_metaclass(ABCMeta,object)):
             setattr(self,k,v.default_value)
 
     def __ne__(self, other):
+        '''
+        Compare inequality between two API Objects
+        :param other: 
+        :return: 
+        '''
+        # Note: Python2 requires explicit declaration of __ne__ for proper operation.
         return not self.__eq__(other)
 
     def __eq__(self, other):

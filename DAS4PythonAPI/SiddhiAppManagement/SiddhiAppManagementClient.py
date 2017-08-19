@@ -3,14 +3,29 @@ from enum import Enum
 from DAS4PythonAPI.__Communication.RestClient import RestClient
 
 class UpdateAppStatusResponse(Enum):
+    '''
+    Response from WSO2 DAS on updateSidhdiApp call of SiddhiAppManagementClient.
+    '''
     savedNew=201,
     updated=200
 
 class SiddhiAppManagementClient(RestClient):
+    '''
+    Client for Siddhi App Management (publish, edit, list, retrieve etc.) in WSO2 DAS.
+    '''
     def __init__(self, siddhi_apps_url):
+        '''
+        Instantiates SiddhiAppMangementClient. 
+        :param siddhi_apps_url: url to siddhi_apps endpoint (e.g. root_url + '/siddhi-apps')
+        '''
         RestClient.__init__(self,siddhi_apps_url)
 
     def retrieveSiddhiApp(self, siddhiAppName):
+        '''
+        Retrieve siddhiApp stored in WSO2 DAS.
+        :param siddhiAppName: 
+        :return: 
+        '''
         r = self._sendGetRequest("/" + siddhiAppName)
         if r.status_code == 200:
             result = r.json()
@@ -26,6 +41,11 @@ class SiddhiAppManagementClient(RestClient):
 
 
     def deleteSiddhiApp(self, siddhiAppName):
+        '''
+        Deletes a SiddhiApp stored in WSO2 DAS.
+        :param siddhiAppName: 
+        :return: 
+        '''
         r = self._sendDeleteRequest("/" + siddhiAppName)
         if r.status_code == 200:
             return True
@@ -40,6 +60,11 @@ class SiddhiAppManagementClient(RestClient):
 
 
     def retrieveStatusSiddhiApp(self, siddhiAppName):
+        '''
+        Retrieve the status of a SiddhiApp in WSO2 DAS.
+        :param siddhiAppName: 
+        :return: 
+        '''
         r = self._sendGetRequest("/" + siddhiAppName + "/status")
         if r.status_code == 200:
             result = r.json()
@@ -54,6 +79,11 @@ class SiddhiAppManagementClient(RestClient):
             raise Exception(str(r.status_code)  + ": " + r.text)
 
     def listSiddhiApps(self, isActive=None):
+        '''
+        Obtains the list of Siddhi Apps in WSO2 DAS.
+        :param isActive: 
+        :return: 
+        '''
         params = None
         if isActive is not None:
             params = {"isActive":isActive}
@@ -65,6 +95,11 @@ class SiddhiAppManagementClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def updateSiddhiApp(self, siddhiApp):
+        '''
+        Updates a Siddhi App in WSO2 DAS.
+        :param siddhiApp: 
+        :return: 
+        '''
         r = self._sendPutRequest("/", data=siddhiApp)
         if r.status_code == 200 or r.status_code == 201:
             result = r.json()
@@ -83,6 +118,11 @@ class SiddhiAppManagementClient(RestClient):
             raise Exception(str(r.status_code) + ": " + r.text)
 
     def saveSiddhiApp(self, siddhiApp):
+        '''
+        Saves a Siddhi App to WSO2 DAS.
+        :param siddhiApp: 
+        :return: 
+        '''
         r = self._sendPostRequest("/",data=siddhiApp)
         if r.status_code == 201:
             result = r.json()
