@@ -1,6 +1,6 @@
 from abc import ABCMeta
 
-from DAS4PythonAPI.Util import decodeField, encodeField
+from DAS4PythonAPI.__Util import decodeField, encodeField
 
 class NotSet(object):
     def __eq__(self, other):

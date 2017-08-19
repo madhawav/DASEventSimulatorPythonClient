@@ -2,7 +2,7 @@ from enum import Enum
 
 from DAS4PythonAPI.ObjectMapping.APIObject import APIObject, NotSet
 from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping, ListFieldMapping
-from DAS4PythonAPI.Util import decodeField, decodeObject
+from DAS4PythonAPI.__Util import decodeField, decodeObject
 
 
 class AttributeConfiguration(APIObject):

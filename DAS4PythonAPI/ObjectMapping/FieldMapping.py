@@ -1,5 +1,5 @@
 from DAS4PythonAPI.ObjectMapping.APIObject import NotSet
-from DAS4PythonAPI.Util import encodeField, decodeField
+from DAS4PythonAPI.__Util import encodeField, decodeField
 
 def strOrInt(v):
     v = str(v)

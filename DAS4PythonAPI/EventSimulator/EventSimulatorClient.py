@@ -1,7 +1,7 @@
 import json
 import logging
 
-from DAS4PythonAPI.Communication.RestClient import RestClient
+from DAS4PythonAPI.__Communication.RestClient import RestClient
 from DAS4PythonAPI.EventSimulator.FeedSimulationConfiguration import FeedSimulationConfiguration
 
 

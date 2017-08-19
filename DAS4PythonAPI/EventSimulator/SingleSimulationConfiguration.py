@@ -1,5 +1,3 @@
-import time
-
 from DAS4PythonAPI.ObjectMapping.APIObject import APIObject
 from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping, ListFieldMapping
 

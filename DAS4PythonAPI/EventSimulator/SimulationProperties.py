@@ -2,7 +2,7 @@ import random
 
 from DAS4PythonAPI.ObjectMapping.APIObject import APIObject, NotSet
 from DAS4PythonAPI.ObjectMapping.FieldMapping import FieldMapping
-from DAS4PythonAPI.Util import encodeField, decodeField, decodeObject
+from DAS4PythonAPI.__Util import decodeField
 
 ran = random
 

@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 
-from DAS4PythonAPI.Communication.RestClient import RestClient
+from DAS4PythonAPI.__Communication.RestClient import RestClient
 
 class UpdateAppStatusResponse(Enum):
     savedNew=201,
