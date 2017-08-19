@@ -4,7 +4,8 @@ import unittest
 import logging
 from time import sleep
 
-from DAS4PythonAPI.SiddhiAppManagement.SiddhiAppManagerClient import SiddhiAppManagerClient, UpdateAppStatusResponse
+from DAS4PythonAPI.DAS4PythonClient import DAS4PythonClient
+from DAS4PythonAPI.SiddhiAppManagement.SiddhiAppManagementClient import UpdateAppStatusResponse
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,7 +16,6 @@ resources_path = os.path.dirname(__file__) + "/resources/"
 class EventSimulatorTests(unittest.TestCase):
     def setUp(self):
         self.hostUrl = "http://localhost:9090"
-        self.simulationUrl = self.hostUrl + "/siddhi-apps"
         logging.info("Prior to launching tests, make sure DAS 4 is running at " + self.hostUrl)
 
     def tearDown(self):
@@ -23,7 +23,8 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testRetrieveSiddhiAppStatus(self):
         logging.info("Test1: Retrieving a Siddhi App Status")
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
 
         status = siddhiAppManagerClient.retrieveStatusSiddhiApp("TestSiddhiApp")
 
@@ -31,7 +32,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testRetrieveSiddhiApp(self):
         logging.info("Test1: Retrieving a Siddhi App")
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
 
         app = siddhiAppManagerClient.retrieveSiddhiApp("TestSiddhiApp")
 
@@ -49,7 +52,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testListSiddhiApps(self):
         logging.info("Test1: List Siddhi Apps")
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
 
         lines = []
         with open(resources_path + "/TestSiddhiApp1.siddhi", "rb") as f:
@@ -74,8 +79,6 @@ class EventSimulatorTests(unittest.TestCase):
         self.assertTrue("TestSiddhiApp1" not in apps)
         logging.info(apps)
 
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
-
         result = siddhiAppManagerClient.deleteSiddhiApp("TestSiddhiApp1")
         self.assertTrue(result)
 
@@ -84,7 +87,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testSaveAndDeleteSiddhiApp(self):
         logging.info("Test1: Save and Delete Siddhi App")
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
 
         lines = []
         with open(resources_path + "/TestSiddhiApp1.siddhi", "rb") as f:
@@ -98,15 +103,15 @@ class EventSimulatorTests(unittest.TestCase):
 
         sleep(5)
 
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
-
         result = siddhiAppManagerClient.deleteSiddhiApp("TestSiddhiApp1")
         self.assertTrue(result)
 
 
     def testUpdateAndDeleteSiddhiApp(self):
         logging.info("Test: Update and Delete Siddhi App")
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
 
         lines = []
         with open(resources_path + "/TestSiddhiApp1.siddhi", "rb") as f:
@@ -123,8 +128,6 @@ class EventSimulatorTests(unittest.TestCase):
         self.assertTrue(result.name == UpdateAppStatusResponse.updated.name)
 
         sleep(5)
-
-        siddhiAppManagerClient = SiddhiAppManagerClient(self.simulationUrl)
 
         result = siddhiAppManagerClient.deleteSiddhiApp("TestSiddhiApp1")
         self.assertTrue(result)

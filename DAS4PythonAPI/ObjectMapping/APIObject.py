@@ -1,14 +1,17 @@
 from abc import ABCMeta
+from future.utils import with_metaclass
 
 from DAS4PythonAPI.__Util import decodeField, encodeField
 
 class NotSet(object):
+    def __ne__(self, other):
+        return not self.__eq__(other)
     def __eq__(self, other):
         if isinstance(other,NotSet):
             return True
         return False
 
-class APIObject(metaclass=ABCMeta):
+class APIObject(with_metaclass(ABCMeta,object)):
     '''
     Abstract Object representing a model used by Rest API
     '''
@@ -27,6 +30,9 @@ class APIObject(metaclass=ABCMeta):
         for k,v in field_mapping.items():
             setattr(self,k,v.default_value)
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __eq__(self, other):
         '''
         Compare equality between two API Objects
@@ -36,6 +42,8 @@ class APIObject(metaclass=ABCMeta):
         if type(self) != type(other):
             return False
         for k,v in self._field_mapping.items():
+            v1 = getattr(self,k,v.default_value)
+            v2 = getattr(other,k,v.default_value)
             if(getattr(self,k,v.default_value) != getattr(other,k,v.default_value)):
                 return False
         return True
@@ -47,6 +55,7 @@ class APIObject(metaclass=ABCMeta):
         '''
         result = {}
         for k,v in self._field_mapping.items():
+            val = getattr(self,k,v.default_value)
             if(v.addDefaultField or getattr(self,k,v.default_value) != v.default_value):
                 result[k] = encodeField(getattr(self,k,v.default_value),v.encode_function)
         return result

@@ -6,7 +6,7 @@ class UpdateAppStatusResponse(Enum):
     savedNew=201,
     updated=200
 
-class SiddhiAppManagerClient(RestClient):
+class SiddhiAppManagementClient(RestClient):
     def __init__(self, siddhi_apps_url):
         RestClient.__init__(self,siddhi_apps_url)
 

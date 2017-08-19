@@ -4,6 +4,7 @@ import logging
 import os
 from time import sleep
 
+from DAS4PythonAPI.DAS4PythonClient import DAS4PythonClient
 from DAS4PythonAPI.EventSimulator.AttributeConfiguration import AttributeConfiguration
 from DAS4PythonAPI.EventSimulator.EventSimulatorClient import EventSimulatorClient
 from DAS4PythonAPI.EventSimulator.FeedSimulationConfiguration import FeedSimulationConfiguration
@@ -17,7 +18,7 @@ resources_path = os.path.dirname(__file__) + "/resources/"
 class EventSimulatorTests(unittest.TestCase):
     def setUp(self):
         self.hostUrl = "http://localhost:9090"
-        self.simulationUrl = self.hostUrl + "/simulation"
+        #self.simulationUrl = self.hostUrl + "/simulation"
         logging.info("Prior to launching tests, make sure DAS 4 is running at " + self.hostUrl)
 
     def tearDown(self):
@@ -25,7 +26,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testSingleSimulation(self):
         logging.info("Test: Simulating a Single Event")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         singleSimulationConfiguration = SingleSimulationConfiguration("TestSiddhiApp","FooStream",[None, 9, 45])
 
@@ -34,7 +37,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testCSVUploadAndDelete(self):
         logging.info("Test: Uploading and Deleting a CSV.")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         self.assertTrue(eventSimulatorClient.uploadCSV("sample.csv",path=resources_path+"sample.csv"))
         logging.info("Successfully Uploaded CSV")
@@ -47,7 +52,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testCSVUpdate(self):
         logging.info("Test: Uploading, Updating and Deleting a CSV.")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         self.assertTrue(eventSimulatorClient.uploadCSV("sample.csv",path=resources_path+"sample.csv"))
         logging.info("Successfully Uploaded CSV")
@@ -65,7 +72,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testSaveDeleteSimulationFeedConfiguration(self):
         logging.info("Test1: Saving and Deleting simulation feed configuration")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulationPrimitive")
         svr.properties.timestampStartTime = 1488615136958
@@ -88,7 +97,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testEditSimulationFeedConfiguration(self):
         logging.info("Test1: Saving, Editing and Deleting simulation feed configuration")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulationPrimitive")
         svr.properties.timestampStartTime = 1488615136958
@@ -119,7 +130,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testRetrieveSimulationFeedConfiguration(self):
         logging.info("Test1: Saving, Retrieving and Deleting simulation feed configuration")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulationPrimitive")
         svr.properties.timestampStartTime = 1488615136958
@@ -149,7 +162,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testRandomSimulationCustomList(self):
         logging.info("Test: Random Simulation using Custom List")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("sim")
         svr.properties.timestampStartTime = 1488615136958
@@ -180,7 +195,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testCSVSimulationSingleSource(self):
         logging.info("Test: CSV Simulation - One Source")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulation1")
         svr.properties.timestampStartTime = None
@@ -214,7 +231,9 @@ class EventSimulatorTests(unittest.TestCase):
 
     def testCSVSimulationTwoSource(self):
         logging.info("Test: CSV Simulation - Two Source")
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simCSV2")
         svr.properties.timestampStartTime = 1488615136957
@@ -285,7 +304,8 @@ class EventSimulatorTests(unittest.TestCase):
           ]
         }
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simDb")
         svr.properties.timestampStartTime = 1488615136958
@@ -321,7 +341,8 @@ class EventSimulatorTests(unittest.TestCase):
     def testDBSimulationTwoSource(self):
         logging.info("Test: DB Simulation - Two Sources")
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simDb")
         svr.properties.timestampStartTime = 1488615136958
@@ -452,7 +473,8 @@ class EventSimulatorTests(unittest.TestCase):
           ]
         }
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simDbNoColumnsList")
         svr.properties.timestampStartTime = 1488615136958
@@ -527,7 +549,8 @@ class EventSimulatorTests(unittest.TestCase):
           ]
         }
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulationPrimitive")
         svr.properties.timestampStartTime = 1488615136958
@@ -605,7 +628,8 @@ class EventSimulatorTests(unittest.TestCase):
           ]
         }
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simRndm")
         svr.properties.timestampStartTime = 1488615136958
@@ -682,7 +706,8 @@ class EventSimulatorTests(unittest.TestCase):
           ]
         }
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simProperty")
         svr.properties.timestampStartTime = 1488615136958
@@ -756,7 +781,9 @@ class EventSimulatorTests(unittest.TestCase):
             }
           ]
         }
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulationCSV")
         svr.properties.timestampStartTime = 1488615136958
@@ -817,7 +844,8 @@ class EventSimulatorTests(unittest.TestCase):
     def testRunPausePrimitiveRandom(self):
         logging.info("Test: Random Simulation - Primitive. Save, Run, Pause, Resume, Stop and Delete.")
 
-        eventSimulatorClient = EventSimulatorClient(self.simulationUrl)
+        dasPythonClient = DAS4PythonClient(self.hostUrl)
+        eventSimulatorClient = dasPythonClient.getEventSimulatorClient()
 
         svr = FeedSimulationConfiguration("simulationPrimitive")
         svr.properties.noOfEvents=8

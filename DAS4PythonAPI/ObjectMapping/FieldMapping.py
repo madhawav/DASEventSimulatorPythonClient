@@ -47,4 +47,4 @@ class ListFieldMapping(FieldMapping):
             for item in input_object:
                 result_object.append(decodeField(item,decode_function))
             return result_object
-        super().__init__(decode_func,encode_func,default_value)
+        FieldMapping.__init__(self,decode_func,encode_func,default_value)

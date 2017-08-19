@@ -5,17 +5,46 @@ This repository is part of the project [Siddhi CEP Python API](https://github.co
 
 This is currently a work in progress, as a project for Google Summer of Code 2017 Program.
 
-Note: Currently, the event simulator of WSO2 DAS 4.0 has been wrapped.
-
 # Current Progress
 - [x] Python Client on DAS 4.0 Event Simulator.
-- [ ] Python Client on DAS 4.0 via REST API.
+- [x] Python Client on DAS 4.0 via REST API.
 - [ ] Python Client on DAS 3.1 via SOAP API.
 
-# Prerequisites
-- WSO2 Data Analytics Server 4.0 (see `Running the Tests` section for installation instructions)
-- Python3 (Python2.7 will be supported in future)
-- Requests for Python3 (`pip3 install requests`)
+Installing the Library from Source
+-----
+1. Install pre-requisites mentioned below.
+    - WSO2 Data Analytics Server 4.0 (see `Running the Tests` section for installation instructions)
+    - Python 2.7+ or Python 3.3+
+    - Requests for Python (`pip install requests`)
+    - Future for Python (`pip install future`)
+    - Enum34 for Python if Python 3.3 is used (`pip install enum34`)
+2. Install using Setup.py.
+    - Clone the GitHub Repository.
+    - Navigate to project root and run `sudo pip install .`
+3. Run WSO2 DAS 4.0 worker.
+    - Clone and Compile WSO2 DAS 4.0 from Source. (refer `Running the Tests` section for instructions)
+    - Navigate to `DAS_Home/bin/` and run `sh worker.sh`.
+
+4. Use the Library using Python.
+    ```python
+    from DAS4PythonAPI.DAS4PythonClient import DAS4PythonClient
+    dasPythonClient = DAS4PythonClient('http://localhost:9090')
+    siddhiAppManagerClient = dasPythonClient.getSiddhiAppManagementClient()
+
+    status = siddhiAppManagerClient.retrieveStatusSiddhiApp("TestSiddhiApp")
+    ```
+    *Refer Tests to get more familiar with library functionality.
+
+Creating deployment wheel (for Any Platform)
+-----
+1. Install pre-requisites mentioned in `Installing the Library from Source` section.
+2. Delete directory `build` if exist. 
+3. Goto source root and run `python setup.py bdist_wheel`
+
+Installing deployment wheel 
+-----
+1. Make sure all pre-requisites are installed. 
+2. Install python wheel using `pip install [path_to_wheel_file]`.
 
 # Running the Tests
 Make sure all prerequisites are met before proceeding with tests.
@@ -43,8 +72,10 @@ Further information on above products are available in the links below.
 * Siddhi 4.0 Library (In Development Version)
   - GitHub - https://github.com/wso2/siddhi
 
-# Contact
+Contributors
+-----
+* __Madhawa Vidanapathirana__
+   - Email: madhawavidanapathirana@gmail.com
+   - Organization: University of Moratuwa
 
-Madhawa - madhawavidanapathirana@gmail.com
-
-#GSoC2017 #WSO2
+__Developer Mail Thread__: dev@wso2.org
