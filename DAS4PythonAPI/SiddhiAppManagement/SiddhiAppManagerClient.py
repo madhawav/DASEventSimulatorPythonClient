@@ -1,4 +1,3 @@
-import json
 from enum import Enum
 
 from DAS4PythonAPI.__Communication.RestClient import RestClient
