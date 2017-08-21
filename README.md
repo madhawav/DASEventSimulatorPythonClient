@@ -1,6 +1,8 @@
 # WSO2 DAS 4.0 Python Client
 Python Client for WSO2 DAS 4.0 (In Development Version)
 
+The current version of Python Client is compatible with WSO2 DAS 4.0-M6 available at https://github.com/wso2/product-das/releases/tag/v4.0.0-M6.
+
 This repository is part of the project [Python API for Siddhi CEP](https://gist.github.com/madhawav/195b7dc601d94c40958d88be1d56e705). For more details on complete scope of the project, visit the project gist at link above.
 
 This repository is currently a work in progress, as a project for Google Summer of Code 2017 Program.
